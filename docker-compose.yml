@@ -1,0 +1,31 @@
+services:  # All application services (containers) are defined here
+
+  backend:  # Backend service (FastAPI + HanLP)
+    build: ./backend  # Build the backend image from the ./backend directory
+    container_name: wenyanwen_backend  # Explicit name for the backend container
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000
+    volumes:
+      - ./backend:/app  # Mounts local folder ./backend to /app in container
+      - ./models:/app/hanlp_data  # Persist HanLP models on the host
+      - ./backend/data:/app/data  # Persist backend data (DB/files)
+    environment:
+      - HANLP_HOME=/app/hanlp_data  # Tell HanLP where its model directory is
+      - OLLAMA_HOST=http://host.docker.internal:11434  # Connect to Ollama running on host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Enable host access from Linux containers
+    restart: always  # Automatically restart the container if it crashes
+
+  frontend:  # Frontend service (Next.js / React)
+    build: ./frontend  # Build the frontend image from the ./frontend directory
+    container_name: wenyanwen_frontend  # Explicit name for the frontend container
+    ports:
+      - "3000:3000"  # Map host port 3000 to container port 3000
+    volumes:
+      - ./frontend:/app  # Mount frontend source code into the container
+      - /app/node_modules  # Anonymous volume to prevent node_modules overwrite
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000  # Backend API URL exposed to browser
+    depends_on:
+      - backend  # Ensure backend starts before frontend
+    restart: always  # Automatically restart the container if it crashes
