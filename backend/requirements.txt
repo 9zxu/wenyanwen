@@ -1,17 +1,9 @@
-# API framework
-fastapi>=0.115.0
-uvicorn[standard]>=0.30.0
-pydantic>=2.10.0
-
-# NLP core (including PyTorch backend to run ELECTRA)
-hanlp[full]>=2.1.0
-pypinyin>=0.55.0
-
-# Speech Services
-edge-tts>=7.2.7
-gTTS>=2.5.0
-
-# LLM & Services
-langchain>=0.3.0
-openai>=1.50.0
-requests>=2.32.0
+fastapi
+uvicorn[standard]
+pydantic
+torch
+hanlp
+pypinyin
+edge-tts
+requests
+gTTS

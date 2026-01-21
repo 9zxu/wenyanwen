@@ -1,12 +1,12 @@
 # Use the official Node.js image
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Copy package.json files first to take advantage of Docker layer caching
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the application source code
 COPY . .

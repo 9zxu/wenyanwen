@@ -3,9 +3,10 @@
 What is this app for
 
 ## Demo
-Mini Demo of Services
 
-[![model demo](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1jOeWcwx8Ni0KA_Y0r_p4YUS1kBvo98D3?usp=sharing)
+- [colab qiuck model demo](https://colab.research.google.com/drive/1jOeWcwx8Ni0KA_Y0r_p4YUS1kBvo98D3?usp=sharing)
+- [aistudio quick UI demo](https://ai.studio/apps/drive/17opMC_OzFOW--ZQ8lKf-_5qWQitouqFJ?fullscreenApplet=true)
+- [light UI demo](demo/README.md)
 
 ## Usage
 
@@ -40,8 +41,7 @@ Mini Demo of Services
 1. clone the repo
 2. You should use `docker-compose` instead of raw `docker build` because this project has two services that need to talk to each other and to your host (Ollama). 
     ```bash
-    # This will build images and start Backend (8000) & Frontend (3000)
-    docker-compose up --build
+    docker compose build && docker compose up
     ```
 3. visit http://localhost:3000
 
@@ -250,4 +250,42 @@ From inside the container, you can access services running on your physical comp
     # Instead of http://localhost:11434
     os.getenv("OLLAMA_HOST", "http://host.docker.internal:11434")
     ```
+  - `ollama` should listen on `0.0.0.0`
+    ```sh
+    sudo systemctl edit ollama.service
+    ```
+    paste these lines between the comments
+    ```conf
+    [Service]
+    Environment="OLLAMA_HOST=0.0.0.0"
+    ```
+    save the file it should show
+    ```sh
+    $ sudo systemctl edit ollama.service
+    Successfully installed edited file '/etc/systemd/system/ollama.service.d/override.conf'.
+    ```
+    restart and reload
+    ```sh
+    sudo systemctl daemon-reload
+    sudo systemctl restart ollama
+    ```
+    check if ollama is running
+    ```sh
+    systemctl status ollama
+    ```
+    ```
+    ● ollama.service - Ollama Service
+        Loaded: loaded (/etc/systemd/system/ollama.service; enabled; preset: enabled)
+        Drop-In: /etc/systemd/system/ollama.service.d
+                └─override.conf
+        Active: active (running) since Wed 2026-01-21 16:15:04 CST; 12s ago
+      Main PID: 41922 (ollama)
+          Tasks: 14 (limit: 38134)
+        Memory: 10.6M (peak: 125.7M)
+            CPU: 242ms
+        CGroup: /system.slice/ollama.service
+                └─41922 /usr/local/bin/ollama serve
+    ```
 - FastAPI processes the data and sends a response (JSON) back to your browser.
+
+

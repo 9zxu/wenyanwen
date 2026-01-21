@@ -1,0 +1,4 @@
+# .dockerignore
+models/
+**/__pycache__/
+.git/

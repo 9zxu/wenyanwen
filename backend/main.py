@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi import Response # audio
 from services.nlp_service import NLPService
 from services.llm_service import LLMService
 from services.tts_service import TTSService
@@ -59,12 +60,13 @@ async def explain(request: ExplainRequest):
 async def get_tts(text: str = Query(...), voice: str = "zh-CN-YunjianNeural"):
     """
     Returns an MP3 audio stream for the given text.
-    回傳 MP3 語音串流
     """
     try:
         audio_data = await tts_service.text_to_speech_stream(text, voice)
-        return StreamingResponse(audio_data, media_type="audio/mpeg")
+        # return StreamingResponse(audio_data, media_type="audio/mpeg")
+        return Response(content=audio_data.getvalue(), media_type="audio/mpeg")
     except Exception as e:
+        print(f"Endpoint Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

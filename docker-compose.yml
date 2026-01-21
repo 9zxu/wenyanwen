@@ -12,6 +12,7 @@ services:  # All application services (containers) are defined here
     environment:
       - HANLP_HOME=/app/hanlp_data  # Tell HanLP where its model directory is
       - OLLAMA_HOST=http://host.docker.internal:11434  # Connect to Ollama running on host
+      - UV_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu
     extra_hosts:
       - "host.docker.internal:host-gateway"  # Enable host access from Linux containers
     restart: always  # Automatically restart the container if it crashes
