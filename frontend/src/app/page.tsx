@@ -16,7 +16,7 @@ interface SavedItem {
 const API_BASE = "http://localhost:8000";
 
 export default function Reader() {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(""); // array destructing
   const [words, setWords] = useState<AnalyzedWord[]>([]);
   const [explanation, setExplanation] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,7 +68,7 @@ export default function Reader() {
     utterance.lang = 'zh-TW'; 
     window.speechSynthesis.speak(utterance);
 
-    
+
     setExplanation("思考中...");
     const res = await fetch(`${API_BASE}/api/explain`, {
       method: "POST",
@@ -77,55 +77,53 @@ export default function Reader() {
     });
     const data = await res.json();
     setExplanation(data.explanation);
-
-    
   };
 
   const getPosColor = (pos: string) => {
-    if (!pos) return 'text-slate-700 dark:text-slate-300';
+    if (!pos) return 'text-[var(--ink-black)]';
     const tag = pos[0].toLowerCase();
     const colors: Record<string, string> = {
-      'n': 'text-blue-700 dark:text-blue-400',
-      'v': 'text-red-800 dark:text-red-400',
+      'n': 'text-[var(--indigo)]',    // 名詞用靛青
+      'v': 'text-[var(--vermillion)]', // 動詞用朱紅
       'a': 'text-emerald-700 dark:text-emerald-400',
       'd': 'text-purple-700 dark:text-purple-400',
-      'p': 'text-amber-700 dark:text-amber-500',
-      'w': 'text-gray-400',
+      'p': 'text-[var(--gold)]',      // 介詞用金色
     };
-    return colors[tag] || 'text-slate-700 dark:text-slate-300';
+    return colors[tag] || 'text-[var(--ink-black)]';
   };
+
 
   return (
     // 使用 overflow-hidden 確保外層不捲動
-    <div className="flex h-screen bg-gray-50 dark:bg-zinc-950 overflow-hidden">
+    <div className="flex h-screen bg-(--bg-paper) overflow-hidden">
       
       {/* 1. 左側文庫欄 */}
-      <aside className="w-64 flex-shrink-0 bg-white dark:bg-zinc-900 border-r dark:border-zinc-800 flex flex-col">
-        <div className="p-4 border-b dark:border-zinc-800">
-          <h2 className="font-bold text-gray-800 dark:text-zinc-200">我的文庫</h2>
+      <aside className="w-64 shrink-0 bg-(--bg-sidebar) border-r border-(--border) flex flex-col">
+        <div className="p-4 border-b border-(--border) ">
+          <h2 className="text-(--gold) font-bold">文言文閱覽室</h2>
         </div>
         <div className="p-4 flex-1 overflow-y-auto space-y-2">
           <button 
             onClick={handleSaveText}
-            className="mb-4 w-full py-2 px-4 border-2 border-dashed border-blue-400 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition text-sm"
+            className="mb-4 w-full py-2 px-4 border-(--gold) text-(--gold) hover:bg-(--gold) hover:text-white border-2 border-dashed rounded-lg transition text-sm"
           >
             + 收藏目前文本
           </button>
           
-          <div className="text-xs text-gray-400 uppercase font-semibold mb-2">範例</div>
+          <div className="text-xs text-(--gold) uppercase font-semibold mb-2">範例</div>
           <button 
             onClick={() => setInputText("師者，所以傳道、受業、解惑也。")}
-            className="w-full text-left p-3 text-sm bg-gray-50 dark:bg-zinc-800 hover:bg-gray-100 rounded transition"
+            className="w-full text-left p-3 text-sm bg-(--bg-sidebar) hover:bg-(--bg-paper) rounded cursor-pointer transition"
           >
             《師說》選段
           </button>
 
-          <div className="text-xs text-gray-400 uppercase font-semibold mt-6 mb-2">已儲存</div>
+          <div className="text-xs text-(--gold) uppercase font-semibold mt-6 mb-2">已儲存</div>
           {savedTexts.map((item) => (
             <div 
               key={item.id}
               onClick={() => setInputText(item.content)}
-              className="group relative w-full text-left p-3 text-sm border border-transparent hover:border-blue-200 bg-white dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-zinc-700 rounded cursor-pointer transition"
+              className="group relative w-full text-left p-3 text-sm bg-(--bg-sidebar) hover:bg-(--bg-paper) rounded cursor-pointer transition"
             >
               <p className="truncate pr-4 text-gray-700 dark:text-zinc-300">{item.content}</p>
               <button 
@@ -140,10 +138,10 @@ export default function Reader() {
       </aside>
 
       {/* 2. 中間主閱讀區 (獨立捲動) */}
-      <main className="flex-1 overflow-y-auto p-8 border-r dark:border-zinc-800">
+      <main className="flex-1 overflow-y-auto p-8 border-r border-(--border)">
         <div className="max-w-2xl mx-auto">
           <textarea 
-            className="w-full p-4 border rounded shadow-sm mb-4 bg-white dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-4 border rounded shadow-sm mb-4 bg-(--bg-paper) border-(--border) outline-none focus:ring-2 focus:ring-(--gold)"
             rows={4}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
@@ -152,20 +150,20 @@ export default function Reader() {
           <button 
             onClick={handleAnalyze}
             disabled={loading}
-            className="bg-blue-500 text-white px-8 py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50 mb-8"
+            className="bg-(--gold) text-white px-8 py-2 rounded-lg hover:bg-(--vermillion) transition disabled:opacity-50 mb-8"
           >
             {loading ? "分析中..." : "開始閱讀"}
           </button>
 
           {words.length > 0 && (
-            <div className="p-10 bg-white dark:bg-zinc-900 rounded-lg shadow-sm leading-[4.5rem]">
+            <div className="p-10 bg-white dark:bg-zinc-900 rounded-lg shadow-sm leading-18">
               {words.map((item, index) => (
                 <span 
                   key={index} 
                   onClick={() => handleWordClick(item.text)}
                   className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900/30 px-1 rounded transition-colors group relative"
                 >
-                  <ruby className={`text-3xl font-serif ${getPosColor(item.pos)}`}>
+                  <ruby className={`text-3xl ${getPosColor(item.pos)}`}>
                     {item.text}
                     <rt className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
                       {item.pinyin}
@@ -181,8 +179,8 @@ export default function Reader() {
       </main>
 
       {/* 3. 右側 AI 分析面板 (固定位置，獨立捲動) */}
-      <aside className="w-80 flex-shrink-0 bg-white dark:bg-zinc-900 flex flex-col shadow-xl">
-        <div className="p-4 border-b dark:border-zinc-800 bg-blue-500 text-white">
+      <aside className="w-80 shrink-0 bg-(--bg-sidebar) flex flex-col shadow-xl">
+        <div className="p-4 border-b border-(--border) bg-(--vermillion) text-white">
           <h3 className="font-bold flex items-center gap-2">
             <span>✨</span> AI 詞義分析
           </h3>
@@ -191,7 +189,7 @@ export default function Reader() {
         <div className="flex-1 overflow-y-auto p-6">
           {explanation ? (
             <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <p className="whitespace-pre-wrap text-gray-700 dark:text-zinc-300 leading-relaxed text-sm lg:text-base">
+              <p className="whitespace-pre-wrap text-gray-700 dark:text-zinc-300 leading-relaxed text-sm lg:text-base font-bold">
                 {explanation}
               </p>
             </div>

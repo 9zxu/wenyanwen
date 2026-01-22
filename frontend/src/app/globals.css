@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -23,4 +23,37 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+ */
+@import "tailwindcss";
+
+:root {
+  /* 淺色模式 - 宣紙氛圍 */
+  --bg-paper: #F7F1E5;      /* 宣紙白 */
+  --bg-sidebar: #E8E2D0;    /* 灰米色 */
+  --ink-black: #1A1A1A;     /* 墨黑 */
+  --vermillion: #9D2933;    /* 朱紅 */
+  --indigo: #4F69C6;        /* 靛青 */
+  --gold: #B89355;          /* 金色 */
+  --border: #D1C7B7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 深色模式 - 墨池氛圍 */
+    --bg-paper: #121212;     /* 墨池底色 */
+    --bg-sidebar: #1C1C1C;   /* 深灰墨 */
+    --ink-black: #E0DCD3;    /* 淺米色文字 */
+    --vermillion: #C24A4F;   /* 亮朱紅 */
+    --indigo: #5C7AAD;       /* 淺靛青 */
+    --gold: #D4AF37;         /* 金色 */
+    --border: #333333;
+  }
+}
+
+body {
+  background-color: var(--bg-paper);
+  color: var(--ink-black);
+  font-family: var(--font-noto-serif), serif;
 }
