@@ -1,8 +1,14 @@
-# wenyanwen
+# 🏮 文言文閱覽室 (Wenyanwen Reader)
 
-What is this app for
+「文言文閱覽室」是一款專為古典文獻設計的智能閱讀助手。本工具整合了 `HanLP` 高精度分詞與詞性標註技術、Web Speech API 沉浸式語音合成，以及透過 Ollama 驅動 `qwen2.5:7b` 的大語言模型 (LLM) 進行深度語義解析。它能將艱澀的文言文轉化為直觀的互動學習體驗，是學生、研究者及古典文學愛好者的理想研究夥伴。
 
-## Demo
+Wenyanwen Reader is an intelligent reading assistant specifically designed for Classical Chinese literature. By integrating `HanLP` for high-precision word segmentation and part-of-speech (POS) tagging, Web Speech API for immersive phonetic narration, and Large Language Models (LLMs) `qwen2.5:7b` via Ollama for contextual interpretation, this tool transforms cryptic ancient texts into an interactive learning experience. It is the perfect companion for students, scholars, and enthusiasts of classical Chinese culture.
+
+![alt text](media/light.png)
+![alt text](media/dark.png)
+
+
+## Mini Demo
 
 - [colab qiuck model demo](https://colab.research.google.com/drive/1jOeWcwx8Ni0KA_Y0r_p4YUS1kBvo98D3?usp=sharing)
 - [aistudio quick UI demo](https://ai.studio/apps/drive/17opMC_OzFOW--ZQ8lKf-_5qWQitouqFJ?fullscreenApplet=true)
@@ -10,7 +16,38 @@ What is this app for
 
 ## Usage
 
-#### **Prerequisites**
+### 💻 Hardware & System Requirements
+
+> Since this project runs a combination of NLP models and an AI Language Model, the requirements are higher than a standard web app.
+
+#### 1. Recommended Hardware
+| Component | Minimum | Recommended |
+| :--- | :--- | :--- |
+| **CPU** | Quad-core (Intel i5 / Apple M1) | 8-core (Intel i7 / Apple M2/M3) |
+| **RAM** | **8 GB** | **16 GB or more** |
+| **GPU** | Not required (CPU only works) | **NVIDIA GPU (6GB+ VRAM)** or **Apple Silicon** |
+| **Storage** | 10 GB free space | 20 GB free space (for Models) |
+
+*   **Why 8GB+ RAM?** 
+    *   **HanLP:** Uses a Transformer-based model (Electra) which requires ~1-2GB of RAM.
+    *   **Ollama (LLM):** If running a 7B-8B parameter model (like Llama 3 or Qwen 2.5), it requires at least 4.5GB to 5GB of RAM just for the model weights.
+    *   **Docker:** Docker itself consumes resources to manage three containers simultaneously.
+
+#### 2. Software Requirements
+*   **Docker Desktop** (Windows/Mac) or **Docker Engine** (Linux).
+*   **Ollama** (Installed on the host machine to utilize GPU acceleration).
+
+#### 3. Network Requirements
+*   **Internet Access:** 
+    *   Required for the **initial build** (to download Docker images and HanLP models).
+
+#### 4. Verified Environment
+*   **Windows 10/11:** Use WSL2 backend for Docker.
+*   **macOS:** Works natively on Intel and Apple Silicon (M1/M2/M3).
+*   **Linux:** Ubuntu 20.04+ recommended.
+
+### **Prerequisites**
+
 1. install ollama from official site https://ollama.com/download
 2. pull the `qwen2.5:7b` model
     ```sh
@@ -69,7 +106,7 @@ What is this app for
 │   ├── services/
 │   │   ├── nlp_service.py   # HanLP logic
 │   │   ├── llm_service.py   # Ollama API wrapper
-│   │   └── tts_service.py   # Edge-TTS logic
+│   │   └── tts_service.py   # Edge-TTS logic (discarded)
 │   ├── requirements.txt
 │   └── data/                # SQLite DB and local logs
 │       └── .gitkeep
